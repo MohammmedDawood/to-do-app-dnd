@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteTodoAsync, changeStatusTodoAsync } from "../redux/todoSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faArrowCircleDown,
-  faArrowCircleUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import TaskDescriptionModal from "./TaskDescriptionModal";
 
 const TodoItem = ({ todo }) => {
   const dispatch = useDispatch();
+  const [showTodoInfo, setShowTodoInfo] = useState(false);
+
+  const handleShowToDoInfo = () => {
+    setShowTodoInfo(!showTodoInfo);
+  };
   const deleteTodobtn = () => {
     console.log("delete");
     console.log(todo.id);
@@ -32,7 +34,6 @@ const TodoItem = ({ todo }) => {
     );
   };
 
-  const [showTodoInfo, setShowTodoInfo] = useState(false);
   return (
     <li className="list-group-item">
       {/* Todo Header */}
@@ -56,11 +57,9 @@ const TodoItem = ({ todo }) => {
             className={
               showTodoInfo ? "btn btn-danger m-1" : "btn btn-success m-1"
             }
-            onClick={() => setShowTodoInfo(!showTodoInfo)}
+            onClick={handleShowToDoInfo}
           >
-            <FontAwesomeIcon
-              icon={showTodoInfo ? faArrowCircleUp : faArrowCircleDown}
-            />
+            <FontAwesomeIcon icon={faInfoCircle} />
           </button>
           <button
             id={todo.id}
@@ -71,28 +70,14 @@ const TodoItem = ({ todo }) => {
           </button>
         </div>
       </div>
-      {/* to do Description */}
+      {/* to do Description it will be Modal*/}
+
       {showTodoInfo && (
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">
-              Responsible Person: {todo.responsiblePerson}
-            </h5>
-            <h6 className="card-subtitle mb-2 text-muted">
-              Status: {todo.status}
-            </h6>
-            <h6 className="card-subtitle mb-2 text-muted">
-              Priority: {todo.priority}
-            </h6>
-            <h6 className="card-subtitle mb-2 text-muted">
-              Start Date: {todo.startDate}
-            </h6>
-            <h6 className="card-subtitle mb-2 text-muted">
-              Deadline: {todo.deadLine}
-            </h6>
-            <p className="card-text">Description: {todo.description}</p>
-          </div>
-        </div>
+        <TaskDescriptionModal
+          todo={todo}
+          showTodoInfo={showTodoInfo}
+          handleShowToDoInfo={handleShowToDoInfo}
+        />
       )}
     </li>
   );

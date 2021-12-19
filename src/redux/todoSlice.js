@@ -44,6 +44,32 @@ export const changeStatusTodoAsync = createAsyncThunk(
     }
   }
 );
+export const editTodoAsync = createAsyncThunk(
+  "todo/editTodoAsync",
+  async (payload) => {
+    const response = await fetch(
+      `http://localhost:7000/todos/edit/${payload.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: payload.title,
+          description: payload.description,
+          status: payload.status,
+        }),
+      }
+    );
+    if (response.status === 200) {
+      console.log(payload);
+      const todos = await response.json();
+      console.log(response);
+      console.log(todos);
+      return { todos };
+    }
+  }
+);
 export const deleteTodoAsync = createAsyncThunk(
   "todo/deleteTodoAsync",
   async (payload) => {
@@ -69,11 +95,7 @@ const todoSlice = createSlice({
         id: action.payload.id,
         title: action.payload.title,
         description: action.payload.description,
-        deadLine: action.payload.deadLine,
-        priority: action.payload.priority,
         status: action.payload.status,
-        startDate: action.payload.startDate,
-        responsiblePerson: action.payload.responsiblePerson,
       };
       //   console.log(newTodo);
       state.push(newTodo);
@@ -82,6 +104,11 @@ const todoSlice = createSlice({
     changeStatus: (state, action) => {
       const index = state.findIndex((todo) => todo.id === action.payload.id);
       state[index].status = action.payload.status;
+    },
+    editTodo: (state, action) => {
+      const index = state.findIndex((todo) => todo.id === action.payload.id);
+      state[index].title = action.payload.title;
+      state[index].description = action.payload.description;
     },
     deleteTodo: (state, action) => {
       // deleteTodo is the action
@@ -107,6 +134,19 @@ const todoSlice = createSlice({
       });
       // console.log(index);
       state[index].status = action.payload.todos.status;
+    },
+    [editTodoAsync.fulfilled]: (state, action) => {
+      console.log("data Edited successfully successfully!");
+      // console.log(state);
+      const index = state.findIndex((todo) => {
+        // console.log(action.payload.todos.id);
+        // console.log(todo.id);
+        return todo.id === action.payload.todos.id;
+      });
+      console.log(index);
+      console.log(action.payload.todos);
+      state[index].title = action.payload.todos.title;
+      state[index].description = action.payload.todos.description;
     },
     [deleteTodoAsync.fulfilled]: (state, action) => {
       console.log("data Deleted successfully successfully!");
