@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Draggable } from "react-beautiful-dnd";
+
 import { deleteTodoAsync, changeStatusTodoAsync } from "../redux/todoSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import TaskDescriptionModal from "./TaskDescriptionModal";
 
-const TodoItem = ({ todo }) => {
+const TodoItem = (props) => {
   const dispatch = useDispatch();
   const [showTodoInfo, setShowTodoInfo] = useState(false);
 
@@ -14,72 +16,86 @@ const TodoItem = ({ todo }) => {
   };
   const deleteTodobtn = () => {
     console.log("delete");
-    console.log(todo.id);
+    console.log(props.todo.id);
     // dispatch event to redux
     dispatch(
       deleteTodoAsync({
-        id: todo.id,
+        id: props.todo.id,
       })
     );
   };
   const ChangeStatusTodobtn = (statusvalue) => {
     console.log("Change Status");
-    console.log(todo.id);
+    console.log(props.todo.id);
     // dispatch event to redux
     dispatch(
       changeStatusTodoAsync({
-        id: todo.id,
+        id: props.todo.id,
         status: statusvalue,
       })
     );
   };
 
   return (
-    <li className="list-group-item">
-      {/* Todo Header */}
-      <div className="d-flex justify-content-between row">
-        <div className="d-flex align-items-center  m-1  col-sm-12 col-md-3 col-lg-3">
-          <b>
-            <h1>{todo.title}</h1>
-          </b>
-        </div>
-        <div className="d-flex align-items-center  col-sm-12 col-md-3 col-lg-3">
-          <select
-            className="form-select mr-sm-1"
-            defaultValue={todo.status}
-            onChange={(event) => ChangeStatusTodobtn(event.target.value)}
-          >
-            <option>To Do</option>
-            <option>In Progress</option>
-            <option>Done</option>
-          </select>
-          <button
+    <>
+      <Draggable draggableId={props.todo.id} index={props.index}>
+        {(provided, snapshot) => (
+          <li
             className={
-              showTodoInfo ? "btn btn-danger m-1" : "btn btn-success m-1"
+              snapshot.isDragging
+                ? "list-group-item bg-success"
+                : "list-group-item"
             }
-            onClick={handleShowToDoInfo}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
           >
-            <FontAwesomeIcon icon={faInfoCircle} />
-          </button>
-          <button
-            id={todo.id}
-            className="btn btn-danger m-1"
-            onClick={() => deleteTodobtn()}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </button>
-        </div>
-      </div>
-      {/* to do Description it will be Modal*/}
-
+            {/* Todo Header */}
+            <div className="d-flex justify-content-between row ">
+              <div className="d-flex align-items-center  m-1  col-sm-12 col-md-3 col-lg-3">
+                <b>
+                  <h1>{props.todo.title}</h1>
+                </b>
+              </div>
+              <div className="d-flex align-items-center  col-sm-12 col-md-3 col-lg-3">
+                <select
+                  className="form-select mr-sm-1"
+                  defaultValue={props.todo.status}
+                  onChange={(event) => ChangeStatusTodobtn(event.target.value)}
+                >
+                  <option>To Do</option>
+                  <option>In Progress</option>
+                  <option>Done</option>
+                </select>
+                <button
+                  className={
+                    showTodoInfo ? "btn btn-danger m-1" : "btn btn-success m-1"
+                  }
+                  onClick={handleShowToDoInfo}
+                >
+                  <FontAwesomeIcon icon={faInfoCircle} />
+                </button>
+                <button
+                  id={props.todo.id}
+                  className="btn btn-danger m-1"
+                  onClick={() => deleteTodobtn()}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            </div>
+          </li>
+        )}
+      </Draggable>
+      {/* Todo Description */}
       {showTodoInfo && (
         <TaskDescriptionModal
-          todo={todo}
+          todo={props.todo}
           showTodoInfo={showTodoInfo}
           handleShowToDoInfo={handleShowToDoInfo}
         />
       )}
-    </li>
+    </>
   );
 };
 
