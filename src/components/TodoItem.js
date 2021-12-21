@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Draggable } from "react-beautiful-dnd";
 
-import { deleteTodoAsync, changeStatusTodoAsync } from "../redux/todoSlice";
+import { deleteTodoAsync } from "../redux/todoSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import TaskDescriptionModal from "./TaskDescriptionModal";
@@ -24,17 +24,17 @@ const TodoItem = (props) => {
       })
     );
   };
-  const ChangeStatusTodobtn = (statusvalue) => {
-    console.log("Change Status");
-    console.log(props.todo.id);
-    // dispatch event to redux
-    dispatch(
-      changeStatusTodoAsync({
-        id: props.todo.id,
-        status: statusvalue,
-      })
-    );
-  };
+  // const ChangeStatusTodobtn = (statusvalue) => {
+  //   console.log("Change Status");
+  //   console.log(props.todo.id);
+  //   // dispatch event to redux
+  //   dispatch(
+  //     changeStatusTodoAsync({
+  //       id: props.todo.id,
+  //       status: statusvalue,
+  //     })
+  //   );
+  // };
 
   return (
     <>
@@ -51,14 +51,14 @@ const TodoItem = (props) => {
             ref={provided.innerRef}
           >
             {/* Todo Header */}
-            <div className="d-flex justify-content-between row ">
-              <div className="d-flex align-items-center  m-1  col-sm-12 col-md-3 col-lg-3">
+            <div className="d-flex justify-content-between row  mx-auto  ">
+              <div className="d-flex align-items-center ">
                 <b>
                   <h1>{props.todo.title}</h1>
                 </b>
               </div>
-              <div className="d-flex align-items-center  col-sm-12 col-md-3 col-lg-3">
-                <select
+              <div className="d-flex align-items-end row">
+                {/* <select
                   className="form-select mr-sm-1"
                   defaultValue={props.todo.status}
                   onChange={(event) => ChangeStatusTodobtn(event.target.value)}
@@ -66,7 +66,7 @@ const TodoItem = (props) => {
                   <option>To Do</option>
                   <option>In Progress</option>
                   <option>Done</option>
-                </select>
+                </select> */}
                 <button
                   className={
                     showTodoInfo ? "btn btn-danger m-1" : "btn btn-success m-1"

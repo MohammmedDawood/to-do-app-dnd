@@ -7,20 +7,20 @@ const AddTodoForm = () => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState("To Do");
+  // const [status, setStatus] = useState("To Do");
 
   const onSubmit = (event) => {
     event.preventDefault();
     console.log("title: " + title);
     console.log("description: " + description);
-    console.log("status: " + status);
+    console.log("status: To Do");
 
     // dispatch event to redux
     dispatch(
       addTodoAsync({
         title,
         description,
-        status,
+        status: "To Do",
       })
     );
 
@@ -32,10 +32,10 @@ const AddTodoForm = () => {
   return (
     <form
       onSubmit={onSubmit}
-      className="form-inline row mt-3 mb-3 justify-content-md-center"
+      className=" align-items-center mx-auto mt-3 mb-3  col-6"
     >
       {/* to do title */}
-      <div className="col-lg-6 col-md-12">
+      <div className="row">
         <div className="input-group mb-2 mr-sm-2 col-3">
           <span className="input-group-text">Title</span>
           <input
@@ -49,7 +49,7 @@ const AddTodoForm = () => {
       </div>
 
       {/* to do description */}
-      <div className="col-lg-12 col-md-12">
+      <div className="row">
         <div className="input-group mb-2 mr-sm-2 col-3">
           <span className="input-group-text mb-2 mr-sm-2">Description</span>
           <textarea
@@ -80,7 +80,7 @@ const AddTodoForm = () => {
 
       {/* to do Submit Button */}
 
-      <div className="col-lg-6 col-md-12">
+      <div className="row">
         <button type="submit" className="btn btn-primary mb-2 col-12">
           Add Todo
         </button>

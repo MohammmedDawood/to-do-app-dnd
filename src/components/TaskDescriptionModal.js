@@ -9,13 +9,13 @@ function TaskDescriptionModal(props) {
 
   const [title, setTitle] = useState(props.todo.title);
   const [description, setDescription] = useState(props.todo.description);
-  const [status, setStatus] = useState("To Do");
+  // const [status, setStatus] = useState(props.todo.status);
 
   const handlesaveChanges = () => {
     console.log("id: " + props.todo.id);
     console.log("title: " + title);
     console.log("description: " + description);
-    console.log("status: " + status);
+    // console.log("status: " + status);
 
     // dispatch event to redux
     dispatch(
@@ -23,7 +23,7 @@ function TaskDescriptionModal(props) {
         id: props.todo.id,
         title,
         description,
-        status,
+        // status,
       })
     );
 
